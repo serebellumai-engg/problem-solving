@@ -4,10 +4,11 @@ import ds.Arrys;
 public class Sortings {
 
     public static void main(String []args){
-        int a[] = {5,3,4,1,2};
+        int a[] = {5,3,4,1,2,5};
         //bubbleSort(a);
         //insertSort(a);
-        selectionSort(a);
+        //selectionSort(a);
+        countSort(a);
         Arrys.printArray(a);
     }
 
@@ -46,5 +47,20 @@ public class Sortings {
             a[minIndex] = a[i];
             a[i] = temp;
         }
+    }
+
+    //Assuming max number is 100
+    public static void countSort(int []a){
+        int count[]= new int[100];
+        for(int i = 0; i< a.length; i++){
+          count[a[i]]++;
+        }
+        int i = 0, j = 0;
+        while(i < a.length) {
+            int c = count[j];
+            while(c-- > 0)
+                a[i++] = j;
+            j++;
+        } 
     }
 }
