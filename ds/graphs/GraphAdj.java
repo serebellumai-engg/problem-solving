@@ -1,124 +1,40 @@
-package ds;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
 
-public class Graphs {
+package ds.graphs;
 
-    public static void main(final String []args){
-        GraphAdj adj = new GraphAdj(6);
-        adj.addEdge(5,0);
-        adj.addEdge(5,2);
-        adj.addEdge(2,3);
-        adj.addEdge(3,1); 
-        adj.addEdge(4,1);
-        //adj.printGraph();
-        System.out.println();
-        System.out.println(adj.getTopologicalSortDFS());
-        System.out.println();
-        System.out.println(adj.getTopologicalSortBFS());
-    
-
-        /*GraphMatrix mat = new GraphMatrix(5);
-        mat.addEdge(0,1);
-        mat.addEdge(0,2);
-        mat.addEdge(1,4);
-        mat.addEdge(2,4); 
-        mat.addEdge(3,4);
-        mat.addEdge(0,4);
-        mat.printGraph();
-        final GraphMatrix mat = new GraphMatrix(5);
-        final int matrix [][] = { { 1, 1, 0, 0, 0 }, 
-        { 0, 1, 0, 0, 1 }, 
-        { 1, 0, 0, 1, 1 }, 
-        { 0, 0, 0, 0, 0 }, 
-        { 1, 0, 1, 0, 1 } };
-        mat.graphMatrix = matrix;
-        /*mat.addEdge(0,1);
-        mat.addEdge(0,2);
-        mat.addEdge(1,4);
-        mat.addEdge(2,4); 
-        mat.addEdge(3,4);
-        mat.addEdge(0,4);*/
-        //System.out.println("Count is "+mat.countIslands());
-    }
-}
-
-class GraphMatrix{
-    int graphMatrix[][];
-    private final int size;
-    public GraphMatrix(final int size){
-        graphMatrix = new int[size][size];
-        this.size = size;
-    }
-
-    void addEdge(final int u, final int v){
-        graphMatrix[u][v] = 1;
-        graphMatrix[v][u] = 1;
-    }
-
-    void printGraph(){
-        for(int i=0;i<size;i++){
-            System.out.print("AdjacencyMatrix of "+i+"->");
-            for(int j=0;j<size; j++){
-                if(graphMatrix[i][j] == 1){
-                    System.out.print(j + " ");
-                }
-            }
-            System.out.println();
-        }
-    }
-
-
-
-    boolean isSafe(final int row, final int column, final boolean [][]visited){
-        return (row >= 0) && (row <size) && (column>=0) && (column <size) && graphMatrix[row][column]== 1 && !visited[row][column];
-    }
-
-    void dFS(final int row, final int column, final boolean visited[][]){
-        final int rowNbr[] = new int[] { -1, -1, -1, 0, 0, 1, 1, 1 }; 
-        final int colNbr[] = new int[] { -1, 0, 1, -1, 1, -1, 0, 1 }; 
-        visited[row][column] = true;
-        for(int k = 0; k< 8; k++){
-            if(isSafe(row + rowNbr[k], column + colNbr[k], visited)){
-                dFS(row + rowNbr[k], column + colNbr[k], visited);
-            }
-        }
-    }
-
-    int countIslands(){
-
-        final boolean visited[][] = new boolean[size][size];
-        int count = 0;
-        for(int i = 0; i< size; i++){
-            for(int j = 0; j< size; j++){
-                if(graphMatrix[i][j] ==1 && !visited[i][j]){
-                    dFS(i, j, visited);
-                    ++count;
-                }
-            }
-        }
-        return count;
-    }
-}
-
-class GraphAdj {
+import java.util.*;
+public class GraphAdj {
     private ArrayList<ArrayList<Integer>> adjacencyList = null;
     private int size;
+    private boolean isUndirected = false;
 
     public GraphAdj(int size){
+        init(size);
+    }
+
+    public void init(int size){
         adjacencyList = new ArrayList<ArrayList<Integer>>(size);
         this.size = size;
         for (int i = 0; i < size; i++) 
             adjacencyList.add(new ArrayList<Integer>()); 
     }
 
-    void addEdge(final int u, final int v){
+    public GraphAdj(int size, boolean isUndirected){
+        init(size);
+        this.isUndirected = isUndirected;
+    }
+
+    public void addEdge(final int u, final int v){
         adjacencyList.get(u).add(v);
-        //adjacencyList.get(v).add(u);
+        if(isUndirected)
+            adjacencyList.get(v).add(u);
+    }
+
+    public ArrayList<ArrayList<Integer>> getAdjacencyList(){
+        return this.adjacencyList;
+    }
+
+    public int getSize(){
+        return this.size;
     }
 
     void printGraph(){
