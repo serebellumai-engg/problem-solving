@@ -9,7 +9,7 @@ public class GraphAlgorithms {
 
     public static void main(String []args){
         GraphAlgorithms algos = new GraphAlgorithms();
-        //algos.printShortestPathFromSourceUndirectedGraph();
+        algos.printShortestPathFromSourceUndirectedGraph();
         DijkstraShortestPath shortestPath = new DijkstraShortestPath(5);
         shortestPath.dijkstra(0);
     }

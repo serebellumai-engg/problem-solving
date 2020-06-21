@@ -11,6 +11,10 @@ public class BackTracking {
   
         RatMaze ratMaze = new RatMaze(maze);
         ratMaze.solve();
+
+        int []input = { 2, 4, 10, 1, 99, 3};
+        SubSetSum subSetSum = new SubSetSum(input, 5);
+        subSetSum.solve();
     }
 }
 
@@ -72,4 +76,42 @@ class RatMaze {
         return false;
     }
 
+}
+
+
+class SubSetSum {
+
+    /**
+     * Time Complexity: O(2^(n^2)).The recursion can run upperbound 2^(n^2) times.
+     */
+    private int[] input = null;
+    private int targetSum;
+    private int subSetCount;
+
+    public SubSetSum(int []input, int targetSum){
+        this.input = input;
+        this.targetSum = targetSum;
+    }
+  
+
+    public void solve(){
+        solveSubSet(0, 0);
+        System.out.println("Number of subsets "+subSetCount);
+    }
+
+    //{ 2, 4, 10, 1, 99, 3};
+    private void solveSubSet(int startIndex, int sumSoFar){
+        System.out.println("Start Index is "+startIndex + "--"+sumSoFar);
+        if(targetSum == sumSoFar){
+            subSetCount++;
+            if(startIndex < input.length){
+                solveSubSet(startIndex, sumSoFar - input[startIndex-1]);
+            }
+        } else {
+            System.out.println("SumSoFar "+sumSoFar);
+            for(int i = startIndex; i < input.length;i++){
+                solveSubSet(i+1, sumSoFar + input[i]);
+            }
+        }
+    }
 }
