@@ -17,6 +17,7 @@ class MinimumCoinChange{
         this.coins = coins;
     }
     
+    //O(mV) => m is number of coins and V is the required change
     public int minCoinChange(){
         int table[] = new int[change + 1];
         for(int i = 0; i<table.length;i++){
