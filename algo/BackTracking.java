@@ -15,6 +15,15 @@ public class BackTracking {
         int []input = { 2, 4, 10, 1, 99, 3};
         SubSetSum subSetSum = new SubSetSum(input, 5);
         subSetSum.solve();
+
+        int mColor[][] = { 
+            { 0, 1, 1, 1 }, 
+            { 1, 0, 1, 0 }, 
+            { 1, 1, 0, 1 }, 
+            { 1, 0, 1, 0 }, 
+        }; 
+        GraphMColoring mColoring = new GraphMColoring(mColor, 3);
+        mColoring.graphColoring();
     }
 }
 
@@ -101,17 +110,66 @@ class SubSetSum {
 
     //{ 2, 4, 10, 1, 99, 3};
     private void solveSubSet(int startIndex, int sumSoFar){
-        System.out.println("Start Index is "+startIndex + "--"+sumSoFar);
         if(targetSum == sumSoFar){
             subSetCount++;
             if(startIndex < input.length){
                 solveSubSet(startIndex, sumSoFar - input[startIndex-1]);
             }
         } else {
-            System.out.println("SumSoFar "+sumSoFar);
             for(int i = startIndex; i < input.length;i++){
                 solveSubSet(i+1, sumSoFar + input[i]);
             }
         }
+    }
+}
+
+class GraphMColoring {
+
+
+    private int[][] adjMatrix = null;
+    private int V;
+    private int m;
+    private int[] color;
+
+    public GraphMColoring(int[][] adjMatrix, int m){
+        this.adjMatrix = adjMatrix;
+        V = 4;
+        this.m = m;
+        color = new int[V];
+    }
+
+    public void graphColoring(){
+        if(!isGraphColoringPossible(0)){
+            System.err.println("Solution not possible");
+            return;
+        }
+        System.out.print("Graph Coloring is ");
+        for(int i = 0 ;i<V;i++){
+            System.out.print(color[i] + " ");
+        }
+        System.out.println();
+    }
+
+    private boolean isValid(int v, int c){
+        for(int i = 0; i <V; i++){
+            if(adjMatrix[v][i] == 1 && c == color[i])
+                return false;
+        }
+        return true;
+    }
+
+    private boolean isGraphColoringPossible(int v){
+        if(v == V){
+            return true;
+        }
+        for(int i = 1; i <= m ;i++){
+            if(isValid(v, i)){
+                color[v] = i;
+                if(isGraphColoringPossible(v+1))
+                    return true;
+                color[v] = 0;
+            }
+        }
+        return false;
     }
 }
