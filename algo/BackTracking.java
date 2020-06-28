@@ -24,6 +24,15 @@ public class BackTracking {
         }; 
         GraphMColoring mColoring = new GraphMColoring(mColor, 3);
         mColoring.graphColoring();
+
+        int hamGraph[][] = {{0, 1, 0, 1, 0}, 
+            {1, 0, 1, 1, 1}, 
+            {0, 1, 0, 0, 1}, 
+            {1, 1, 0, 0, 1}, 
+            {0, 1, 1, 1, 0}, 
+        }; 
+        HamiltonianCycle hCycle = new HamiltonianCycle(hamGraph, 5);
+        hCycle.verifyIfHamiltonian();
     }
 }
 
@@ -143,7 +152,7 @@ class GraphMColoring {
             System.err.println("Solution not possible");
             return;
         }
-        System.out.print("Graph Coloring is ");
+        System.out.print("Graph Coloring is");
         for(int i = 0 ;i<V;i++){
             System.out.print(color[i] + " ");
         }
@@ -168,6 +177,68 @@ class GraphMColoring {
                 if(isGraphColoringPossible(v+1))
                     return true;
                 color[v] = 0;
+            }
+        }
+        return false;
+    }
+}
+
+class HamiltonianCycle {
+
+    private int [][]adjMatrix = null;
+    private int vertex;
+    private int []path;
+    
+
+    public HamiltonianCycle(int [][]adjMatrix, int vertex){
+        this.adjMatrix = adjMatrix;
+        this.vertex = vertex;
+        path = new int[vertex];
+    }
+
+    private boolean isValidMove(int position, int v) {
+        if(adjMatrix[path[position-1]][v] == 0){
+            return false;
+        }
+        for(int i = 0; i < position ; i++){
+            if(path[i] == v)
+                return false;
+        }
+        return true;
+    }
+
+    public void verifyIfHamiltonian(){
+        for(int i = 0; i<vertex; i++){
+            path[i] = -1;
+        }
+        path[0] = 0;
+        if(!isHamiltonian(1)){
+            System.err.println("No hamiltonian graph possible");
+            return;
+        }
+        System.out.println("Solution exists");
+        for(int i = 0; i< vertex; i++){
+            System.out.print(path[i] + " ");
+        }
+        System.out.println(path[0]);
+    }
+
+    private boolean isHamiltonian(int position){
+
+        if(position == vertex){
+            if(adjMatrix[path[position-1]][path[0]] == 1){
+                return true;
+            } else {
+                return false;
+            }
+        }
+        for(int v = 1; v < vertex; v++){
+            if(isValidMove(position, v)){
+                path[position] = v;
+                if(isHamiltonian(position +1)){
+                    return true;
+                }
+                path[position]= -1;
             }
         }
         return false;
