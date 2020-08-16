@@ -1,2 +1,2 @@
 # ds-and-algo
-# Revision material for me
+# Regular practise, saving for reference
