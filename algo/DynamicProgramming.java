@@ -8,6 +8,9 @@ public class DynamicProgramming{
         int []array = {-2, -3, 4, -1, -2, 1, 5, -3};
         MaximumSubSequenceSum subSequence = new MaximumSubSequenceSum(array);
         System.out.println("Maximum sub sequence sum is " + subSequence.getMaximumSubSequenceSum());
+        int array1[] = {10, 22, 9, 33, 21, 50, 41, 60};
+        LongestIncreasingSubSequence longestSequence = new LongestIncreasingSubSequence(array1);
+        System.out.println("Longest Increasing sequence is "+longestSequence.getLongestSequenceSum());
     }
 }
 
@@ -65,4 +68,37 @@ class MaximumSubSequenceSum{
         return maxSum;
     }
 
+}
+
+class LongestIncreasingSubSequence {
+
+    int []array;
+    int []lis;
+    int max = 0;
+    public LongestIncreasingSubSequence(int []array){
+        this.array = array;
+        this.lis = new int[this.array.length];
+    }
+
+    public int getLongestSequenceSum(){
+        int length = array.length;
+        int []lis = new int[length];
+        for(int i = 0; i<length; i++){
+            lis[i] = 1;
+        }
+
+        for(int i = 1; i<length; i++){
+            for(int j=0; j<i;j++){
+                if(array[i] > array[j] && lis[i] < lis[j] + 1) {
+                    lis[i] = lis[j] + 1;
+                }
+            }
+        }
+        for(int j = 0; j<length; j++){
+            if(lis[j] > max){
+                max = lis[j];
+            }
+        }
+        return max;
+    }
 }
