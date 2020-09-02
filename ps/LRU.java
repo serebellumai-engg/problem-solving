@@ -5,18 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LRU {
-
-
     private DoublyLinkedList recentlyUsedList = null;
     private Map<String, Pair<DoublyNode, String>> map = null;
     private int maxCapacity;
-
 
     public LRU(int maxCapacity) {
         this.maxCapacity = maxCapacity;
         recentlyUsedList = new DoublyLinkedList();
         map = new HashMap<>();
-
     }
 
     public String get(String key) {
@@ -34,10 +30,9 @@ public class LRU {
             map.remove(removedKey);
         }
         DoublyNode newNode = new DoublyNode(key);
-        map.put(key, new Pair(newNode, value));
+        map.put(key, new Pair<DoublyNode, String>(newNode, value));
         recentlyUsedList.addInBeginning(newNode);
     }
-
 }
 
 class DoublyNode {
@@ -134,7 +129,3 @@ class Pair<K, V> {
         return secondValue;
     }
 }
-
-
-
-
