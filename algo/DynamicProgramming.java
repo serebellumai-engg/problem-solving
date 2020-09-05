@@ -11,6 +11,9 @@ public class DynamicProgramming{
         int array1[] = {10, 22, 9, 33, 21, 50, 41, 60};
         LongestIncreasingSubSequence longestSequence = new LongestIncreasingSubSequence(array1);
         System.out.println("Longest Increasing sequence is "+longestSequence.getLongestSequenceSum());
+        RodCutting cutting = new RodCutting();
+        int price[] = new int[] {1, 5, 8, 9, 10, 17, 17, 20}; 
+        System.out.println("Max rod cutting price is "+cutting.maxCutRodPrice(price, price.length));
     }
 }
 
@@ -100,5 +103,21 @@ class LongestIncreasingSubSequence {
             }
         }
         return max;
+    }
+}
+
+class RodCutting{
+  
+    public int maxCutRodPrice(int []price, int n){
+        int maxRodCutting[] = new int[n+1];
+        maxRodCutting[0] = 0;
+        for(int i = 1; i <=n; i++){
+            int maxPrice = Integer.MIN_VALUE;
+            for(int j = 0; j <i; j++){
+                maxPrice = Math.max(maxPrice, price[j] + maxRodCutting[i-j-1]);
+            }
+            maxRodCutting[i]= maxPrice;
+        }
+        return maxRodCutting[n];
     }
 }
