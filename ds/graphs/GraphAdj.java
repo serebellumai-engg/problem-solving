@@ -140,4 +140,60 @@ public class GraphAdj {
         }
         return output;
     }
+    
+     private boolean isCyclicUtil(int v, int parent, boolean[] visited) {
+        visited[v] = true;
+        for (Integer it : adjacencyList.get(v)) {
+            if (!visited[it]) {
+                if (isCyclicUtil(it, v, visited)) {
+                    return true;
+                }
+            } else if (it != parent) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean isUndirectedCycle() {
+        boolean[] visited = new boolean[size + 1];
+        for (int i = 0; i < size; i++) {
+            if (!visited[i]) {
+                if (isCyclicUtil(i, -1, visited)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    private boolean isCyclicUtil(int v, boolean[] visited, boolean[] dfsVisited) {
+        dfsVisited[v] = true;
+        visited[v] = true;
+        for (Integer it : adjacencyList.get(v)) {
+            if (!visited[it]) {
+                if (isCyclicUtil(it, visited, dfsVisited)) {
+                    return true;
+                }
+            } else if (dfsVisited[it]) {
+                return true;
+            }
+        }
+        dfsVisited[v] = false;
+        return false;
+    }
+
+    boolean isDirectedCycle() {
+        boolean[] visited = new boolean[size+1];
+        boolean[] dfsVisited = new boolean[size+1];
+        for (int i = 0; i < size; i++) {
+            if (!visited[i]) {
+                if (isCyclicUtil(i, visited, dfsVisited)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
