@@ -1,131 +1,81 @@
-package ps;
+class LRUCache {
 
-
-import java.util.HashMap;
-import java.util.Map;
-
-public class LRU {
-    private DoublyLinkedList recentlyUsedList = null;
-    private Map<String, Pair<DoublyNode, String>> map = null;
-    private int maxCapacity;
-
-    public LRU(int maxCapacity) {
-        this.maxCapacity = maxCapacity;
-        recentlyUsedList = new DoublyLinkedList();
-        map = new HashMap<>();
+    private int capacity;
+    private Map<Integer, DoublyNode> cacheMap;
+    private DoublyNode head = null, tail = null;
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        cacheMap = new HashMap<>();
+        head = new DoublyNode();
+        tail = new DoublyNode();
+        head.next = tail;
+        tail.previous = head;
     }
-
-    public String get(String key) {
-        if (map.containsKey(key)) {
-            DoublyNode currentNode = map.get(key).getFirstValue();
-            recentlyUsedList.addInBeginning(currentNode);
-            return map.get(key).secondValue;
+    
+    public int get(int key) {
+        if(capacity <=0 || !cacheMap.containsKey(key)) {
+            return -1;
         }
-        return null;
+        DoublyNode node = cacheMap.get(key);
+        moveNodeToFront(node);
+        return node.value;
     }
-
-    public void put(String key, String value) {
-        if (recentlyUsedList.size() == maxCapacity) {
-            String removedKey = recentlyUsedList.removeTail();
-            map.remove(removedKey);
+    
+    public void put(int key, int value) {
+        if(cacheMap.containsKey(key)) {
+            DoublyNode node = cacheMap.get(key);
+            node.value = value;
+            moveNodeToFront(node);
+        } else {
+            DoublyNode node = new DoublyNode(key, value);
+            cacheMap.put(key, node);
+            addNewNode(node);
+            if(cacheMap.size() > capacity) {
+                int removeKey = removeLRUNode();
+                cacheMap.remove(removeKey);
+            }
         }
-        DoublyNode newNode = new DoublyNode(key);
-        map.put(key, new Pair<DoublyNode, String>(newNode, value));
-        recentlyUsedList.addInBeginning(newNode);
+    }
+    
+    private void moveNodeToFront(DoublyNode node) {
+        node.next.previous = node.previous;
+        node.previous.next = node.next;
+        node.next = head.next;
+        node.next.previous = node;
+        node.previous = head;
+        head.next = node;
+    }
+    
+    private void addNewNode(DoublyNode node) {
+        node.next = head.next;
+        node.next.previous = node;
+        node.previous = head;
+        head.next = node;
+    }
+    
+    private int removeLRUNode() {
+        int key = -1;
+        if(tail.previous != head) {
+            DoublyNode lruNode = tail.previous;
+            key = lruNode.key;
+            lruNode.previous.next= tail;
+            tail.previous = lruNode.previous;
+        }
+        return key;
     }
 }
 
 class DoublyNode {
-
-    String val;
-    DoublyNode nextPtr;
-    DoublyNode prevPtr;
-
-    public DoublyNode(String val) {
-        this.val = val;
-        this.prevPtr = null;
-        this.nextPtr = null;
+    int key;
+    int value;
+    DoublyNode previous;
+    DoublyNode next;
+    
+    public DoublyNode() {
+        
     }
-
-    public DoublyNode getNextPtr() {
-        return nextPtr;
-    }
-
-    public DoublyNode getPrevPtr() {
-        return prevPtr;
-    }
-
-}
-
-class DoublyLinkedList {
-
-    private DoublyNode headPtr;
-    private DoublyNode lastPtr;
-    private int size;
-
-    public DoublyLinkedList() {
-    }
-
-    public DoublyLinkedList(String value) {
-        headPtr = new DoublyNode(value);
-        headPtr.prevPtr = null;
-        headPtr.nextPtr = null;
-        lastPtr = headPtr;
-    }
-
-    public DoublyNode getHead() {
-        return headPtr;
-    }
-
-    public void addInBeginning(DoublyNode node) {
-        if (headPtr != null) {
-            DoublyNode temp = headPtr;
-            node.nextPtr = temp;
-            temp.prevPtr = node;
-            headPtr = node;
-        } else {
-            headPtr = node;
-            lastPtr = headPtr;
-        }
-        size += 1;
-    }
-
-    public String removeTail() {
-        String tailValue = lastPtr.val;
-        lastPtr = lastPtr.prevPtr;
-        lastPtr.nextPtr = null;
-        size -= 1;
-        return tailValue;
-    }
-
-    public int size() {
-        return size;
-    }
-
-    public void printDoublyLinkedList() {
-        DoublyNode temp = this.getHead();
-        while (temp != null) {
-            System.out.print(temp.val + "<=>");
-            temp = temp.getNextPtr();
-        }
-        System.out.println();
-    }
-}
-
-class Pair<K, V> {
-    K firstValue;
-    V secondValue;
-
-    public Pair(K firstValue, V secondValue) {
-        this.firstValue = firstValue;
-        this.secondValue = secondValue;
-    }
-
-    public K getFirstValue() {
-        return firstValue;
-    }
-
-    public V getSecondValue() {
-        return secondValue;
+    public DoublyNode(int key, int value) {
+        this.key = key;
+        this.value = value;
     }
 }
